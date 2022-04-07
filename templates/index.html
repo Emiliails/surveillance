@@ -1,10 +1,28 @@
 {% extends 'base.html' %}
 
 {% block head %}
-
+<title>监控首页</title>
 {% endblock %}
 
 {% block body %}
-<h1>Pi Video Surveillance</h1>
+<h1>树莓派视频监控</h1>
 <img src="{{ url_for('video_feed') }}">
+<div class="content">
+    <h2>入侵记录</h2>
+    <table>
+        <tr>
+            <th>id</th>
+            <th>图片</th>
+            <th>时间</th>
+        </tr>
+        {% for record in records %}
+            <tr>
+                <td>{{ record.id }}</td>
+                <td><img src="{{ url_for('static', filename='img/' + record.image_name) }}"></td>
+                <td>{{ record.date_created }}</td>
+            </tr>
+        {% endfor %}
+            
+    </table>
+</div>
 {% endblock %}

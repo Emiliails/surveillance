@@ -1,5 +1,9 @@
 # import the necessary packages
 from email.policy import default
+from fileinput import filename
+import os
+
+from numpy import record
 from pyimagesearch.motion_detection.singlemotiondetector import SingleMotionDetector
 from imutils.video import VideoStream
 from flask import Response
@@ -29,7 +33,7 @@ db = SQLAlchemy(app)
 
 class Records(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    picture = db.Column(db.LargeBinary, nullable=False)
+    image_name = db.Column(db.String, nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.datetime.utcnow())
 
     def __repr__(self):
@@ -45,7 +49,8 @@ time.sleep(2.0)
 @app.route("/")
 def index():
     # return the rendered template
-    return render_template("index.html")
+    records = Records.query.order_by(Records.date_created).all()
+    return render_template("index.html", records=records)
 
 def detect_motion(frameCount):
     # grab global references to the video stream, output frame, and
@@ -86,6 +91,22 @@ def detect_motion(frameCount):
                 (thresh, (minX, minY, maxX, maxY)) = motion
                 cv2.rectangle(frame, (minX, minY), (maxX, maxY),
                     (0, 0, 255), 2)
+                
+                # save the frame to database
+                if round(time.time())%10==0:
+                    # (flag, encodedImage) = cv2.imencode(".jpg", frame.copy())
+                    flag = True
+                    if flag:
+                        filename = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")+".jpg"
+                        os.chdir("/home/pi/surveillance/static/img")
+                        # cv2.imwrite(filename,encodedImage)
+                        cv2.imwrite(filename,frame.copy())
+                        new_record = Records(image_name=filename)
+                        try:
+                            db.session.add(new_record)
+                            db.session.commit()
+                        except:
+                            print('There was an issue adding your record')
 
         # update the background model and increment the total number
         # of frames read thus far
