@@ -22,6 +22,7 @@ import cv2
 # exchanges of the output frames (useful when multiple browsers/tabs
 # are viewing the stream)
 outputFrame = None
+# creating a lock
 lock = threading.Lock()
 
 # initialize a flask object
@@ -31,6 +32,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
 
+# database model
 class Records(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     image_name = db.Column(db.String, nullable=False)
@@ -40,10 +42,9 @@ class Records(db.Model):
         return 'Record %r' % self.id
 
 
-# initialize the video stream and allow the camera sensor to
-# warmup
+# initialize the video stream and allow the camera sensor to warmup
 vs = VideoStream(usePiCamera=1).start()
-#vs = VideoStream(src=0).start()
+# vs = VideoStream(src=0).start()
 time.sleep(2.0)
 
 @app.route("/")
@@ -53,14 +54,14 @@ def index():
     return render_template("index.html", records=records)
 
 def detect_motion(frameCount):
-    # grab global references to the video stream, output frame, and
-    # lock variables
+    # grab global references to the video stream, output frame, and lock variables
     global vs, outputFrame, lock
 
-    # initialize the motion detector and the total number of frames
-    # read thus far
+    # initialize the motion detector and the total number of frames read thus far
     md = SingleMotionDetector(accumWeight=0.1)
     total = 0
+
+    motionCount = 0
 
     # loop over frames from the video stream
     while True:
@@ -91,30 +92,31 @@ def detect_motion(frameCount):
                 (thresh, (minX, minY, maxX, maxY)) = motion
                 cv2.rectangle(frame, (minX, minY), (maxX, maxY),
                     (0, 0, 255), 2)
+                # the number of frame containing motion is self added
+                motionCount += 1
                 
-                # save the frame to database
-                if round(time.time())%10==0:
-                    # (flag, encodedImage) = cv2.imencode(".jpg", frame.copy())
-                    flag = True
-                    if flag:
-                        filename = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")+".jpg"
-                        os.chdir("/home/pi/surveillance/static/img")
-                        # cv2.imwrite(filename,encodedImage)
-                        cv2.imwrite(filename,frame.copy())
-                        new_record = Records(image_name=filename)
-                        try:
-                            db.session.add(new_record)
-                            db.session.commit()
-                        except:
-                            print('There was an issue adding your record')
+                # save the frame to database every 100 motion frames
+                if motionCount == 100:
+                    # reset the value of motionCount
+                    motionCount = 0
+
+                    # save the frame and filename to local filesystem & database, respectively
+                    filename = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")+".jpg"
+                    os.chdir("/home/pi/surveillance/static/img")
+                    cv2.imwrite(filename,frame.copy())
+                    new_record = Records(image_name=filename)
+                    try:
+                        db.session.add(new_record)
+                        db.session.commit()
+                    except:
+                        print('There was an issue adding your record')
 
         # update the background model and increment the total number
         # of frames read thus far
         md.update(gray)
         total += 1
 
-        # acquire the lock, set the output frame, and release the
-        # lock
+        # acquire the lock, set the output frame, and release the lock
         with lock:
             outputFrame = frame.copy()
 
