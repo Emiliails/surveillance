@@ -4,6 +4,7 @@ from fileinput import filename
 import os
 
 from numpy import record
+from pyimagesearch.buzzer.buzzer import destroy_buzzer, setup_buzzer, start_buzzer, stop_buzzer
 from pyimagesearch.motion_detection.singlemotiondetector import SingleMotionDetector
 from imutils.video import VideoStream
 from flask import Response
@@ -41,6 +42,8 @@ class Records(db.Model):
     def __repr__(self):
         return 'Record %r' % self.id
 
+# initialize the buzzer
+setup_buzzer()
 
 # initialize the video stream and allow the camera sensor to warmup
 vs = VideoStream(usePiCamera=1).start()
@@ -61,7 +64,12 @@ def detect_motion(frameCount):
     md = SingleMotionDetector(accumWeight=0.1)
     total = 0
 
+    # the number of frame containing motion. This frame will be added to the database
+    # once reach 100. Then the counter will be reset.
     motionCount = 0
+
+    # the status of the buzzer
+    buzzering = False
 
     # loop over frames from the video stream
     while True:
@@ -87,6 +95,10 @@ def detect_motion(frameCount):
 
             # check to see if motion was found in the frame
             if motion is not None:
+                #start buzzering
+                if not buzzering:
+                    start_buzzer()
+                    buzzering = True
                 # unpack the tuple and draw the box surrounding the
                 # "motion area" on the output frame
                 (thresh, (minX, minY, maxX, maxY)) = motion
@@ -110,12 +122,17 @@ def detect_motion(frameCount):
                         db.session.commit()
                     except:
                         print('There was an issue adding your record')
+            else:
+                # stop buzzering
+                if buzzering:
+                    stop_buzzer()
+                    buzzering = False
 
         # update the background model and increment the total number
         # of frames read thus far
         md.update(gray)
         total += 1
-
+        
         # acquire the lock, set the output frame, and release the lock
         with lock:
             outputFrame = frame.copy()
@@ -175,3 +192,6 @@ if __name__ == '__main__':
         
 # release the video stream pointer
 vs.stop()
+
+# release the buzzer
+destroy_buzzer()
