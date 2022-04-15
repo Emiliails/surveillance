@@ -1,28 +1,27 @@
 {% extends 'base.html' %}
 
-{% block head %}
-<title>监控首页</title>
-{% endblock %}
-
-{% block body %}
+{% block content %}
+{#
+<h1>Bootstrap-Flask Demo Application</h1>
+<ul>
+    <li><a href="{{ url_for('test_form') }}">Form</a></li>
+    <li><a href="{{ url_for('test_nav') }}">Nav</a></li>
+    <li><a href="{{ url_for('test_pagination') }}">Pagination</a></li>
+    <li><a href="{{ url_for('test_flash') }}">Flash Messages</a></li>
+    <li><a href="{{ url_for('test_table') }}">Table</a></li>
+    <li><a href="{{ url_for('test_icon') }}">Icon</a></li>
+</ul>
+#}
 <h1>树莓派视频监控</h1>
-<img src="{{ url_for('video_feed') }}">
-<div class="content">
-    <h2>入侵记录</h2>
-    <table>
-        <tr>
-            <th>id</th>
-            <th>图片</th>
-            <th>时间</th>
-        </tr>
-        {% for record in records %}
-            <tr>
-                <td>{{ record.id }}</td>
-                <td><img src="{{ url_for('static', filename='img/' + record.image_name) }}"></td>
-                <td>{{ record.date_created }}</td>
-            </tr>
-        {% endfor %}
-            
-    </table>
-</div>
+
+{# <img src="{{ url_for('video_feed') }}"> #}
+
+<div class="card" style="width: 18rem;">
+    <img src="{{ url_for('video_feed') }}" class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">📹实时监控中</h5>
+      <p class="card-text">本系统可记录入侵情况🥷，确保入侵记录可追溯✅，实现无人值守</p>
+      <a href="{{ url_for('records') }}" class="btn btn-primary">查看全部入侵记录</a>
+    </div>
+  </div>
 {% endblock %}

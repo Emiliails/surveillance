@@ -7,7 +7,8 @@ from numpy import record
 from pyimagesearch.buzzer.buzzer import destroy_buzzer, setup_buzzer, start_buzzer, stop_buzzer
 from pyimagesearch.motion_detection.singlemotiondetector import SingleMotionDetector
 from imutils.video import VideoStream
-from flask import Response
+from flask_bootstrap import Bootstrap5
+from flask import Response, request
 from flask import Flask
 from flask import render_template
 from flask import url_for
@@ -28,10 +29,13 @@ lock = threading.Lock()
 
 # initialize a flask object
 app = Flask(__name__)
+# instanzlize the Bootstrap5 class
+bootstrap = Bootstrap5(app)
 
 # initialize a sqlite database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
+
 
 # database model
 class Records(db.Model):
@@ -53,8 +57,17 @@ time.sleep(2.0)
 @app.route("/")
 def index():
     # return the rendered template
-    records = Records.query.order_by(Records.date_created).all()
-    return render_template("index.html", records=records)
+    return render_template("index.html")
+
+@app.route("/records")
+def records():
+    page = request.args.get('page', 1, type=int)
+    pagination = Records.query.order_by(Records.id.desc()).paginate(page, per_page=5)
+    # pagination = Records.query.paginate(page, per_page=10)
+    records = pagination.items
+    titles = [('id', '#'), ('image_name', 'Image'), ('date_created', 'Create Time')]
+    return render_template("records.html", records=records, titles=titles, Records=Records, pagination=pagination)
+
 
 def detect_motion(frameCount):
     # grab global references to the video stream, output frame, and lock variables

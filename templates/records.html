@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/table.html' import render_table %}
+{% from 'bootstrap5/pagination.html' import render_pager, render_pagination %}
+
+{% block content %}
+
+<h1>入侵记录</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">图片</th>
+            <th scope="col">时间</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in records %}
+        <tr>
+            <th scope="row">{{ record.id }}</th>
+            <td><img src="{{ url_for('static', filename='img/' + record.image_name) }}"></td>
+            <td>{{ record.date_created }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+{{ render_pagination(pagination) }}
+
+{# {{ render_table(records) }} #}
+
+{% endblock %}
