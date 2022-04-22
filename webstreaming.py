@@ -1,11 +1,10 @@
 # import the necessary packages
-from email.policy import default
-from fileinput import filename
 import os
 
 from numpy import record
 from pyimagesearch.buzzer.buzzer import destroy_buzzer, setup_buzzer, start_buzzer, stop_buzzer
 from pyimagesearch.motion_detection.singlemotiondetector import SingleMotionDetector
+from systeminfo import generic_info, system_info
 from imutils.video import VideoStream
 from flask_bootstrap import Bootstrap5
 from flask import Response, request
@@ -29,6 +28,9 @@ lock = threading.Lock()
 
 # initialize a flask object
 app = Flask(__name__)
+
+# register a blueprint to show system info
+app.register_blueprint(system_info)
 # instanzlize the Bootstrap5 class
 bootstrap = Bootstrap5(app)
 
@@ -41,7 +43,7 @@ db = SQLAlchemy(app)
 class Records(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     image_name = db.Column(db.String, nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.datetime.utcnow())
+    date_created = db.Column(db.DateTime, default=datetime.datetime.now())
 
     def __repr__(self):
         return 'Record %r' % self.id
@@ -56,8 +58,10 @@ time.sleep(2.0)
 
 @app.route("/")
 def index():
+    # get system info dict
+    system_info = generic_info()
     # return the rendered template
-    return render_template("index.html")
+    return render_template("index.html",system_info=system_info)
 
 @app.route("/records")
 def records():
