@@ -3,50 +3,53 @@
 {% block content %}
 <h1>树莓派视频监控</h1>
 <div class="container">
-    <div class="card-deck">
-        <div class="card" style="width: 36rem;">
-
-            <img src="{{ url_for('video_feed') }}" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">📹实时监控中</h5>
-                <p class="card-text">本系统可记录入侵情况🥷，确保入侵记录可追溯✅，实现无人值守</p>
-                <a href="{{ url_for('records') }}" class="btn btn-primary">查看全部入侵记录</a>
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 36rem;">
+                <img src="{{ url_for('video_feed') }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">📹实时监控中</h5>
+                    <p class="card-text">本系统可记录入侵情况🥷，确保入侵记录可追溯✅，实现无人值守</p>
+                    <a href="{{ url_for('records') }}" class="btn btn-primary">查看全部入侵记录</a>
+                </div>
             </div>
         </div>
-        <div class="card" style="width: 40rem;">
-            <div class="card-body">
-                <h5 class="card-title">Generic Info</h5>
-                <h6 class="card-subtitle mb-2 text-muted">基本信息</h6>
-                <p class="card-text">
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            <td>Name of the Pi</td>
-                            <td>{{system_info['machine_name']}}</td>
-                        </tr>
-                        <tr>
-                            <td>Hardware Type</td>
-                            <td>{{system_info['hardware_type']}}</td>
-                        </tr>
-                        <tr>
-                            <td>Serial Number</td>
-                            <td>{{system_info['serial_number']}}</td>
-                        </tr>
-                        <tr>
-                            <td>Operating System</td>
-                            <td>{{system_info['oprating_system']}}</td>
-                        </tr>
-                        <tr>
-                            <td>Running Since</td>
-                            <td>{{system_info['running_duration']}}, Started on {{system_info['start_time']}}</td>
-                        </tr>
-                        <tr>
-                            <td>System Time</td>
-                            <td>{{system_info['currnet_time']}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                </p>
+        <div class="col">
+            <div class="card" style="width: 40rem;">
+                <div class="card-body">
+                    <h5 class="card-title">基本信息</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Generic Info</h6>
+                    <p class="card-text">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>设备名称</td>
+                                <td>{{system_info['machine_name']}}</td>
+                            </tr>
+                            <tr>
+                                <td>硬件类型</td>
+                                <td>{{system_info['hardware_type']}}</td>
+                            </tr>
+                            <tr>
+                                <td>序列号</td>
+                                <td>{{system_info['serial_number']}}</td>
+                            </tr>
+                            <tr>
+                                <td>操作系统</td>
+                                <td>{{system_info['oprating_system']}}</td>
+                            </tr>
+                            <tr>
+                                <td>已运行时间</td>
+                                <td>{{system_info['running_duration']}}, 开机时间{{system_info['start_time']}}</td>
+                            </tr>
+                            <tr>
+                                <td>系统时间</td>
+                                <td>{{system_info['currnet_time']}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </p>
+                </div>
             </div>
         </div>
     </div>

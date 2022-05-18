@@ -11,27 +11,27 @@
             <table class="table">
                 <tbody>
                     <tr>
-                        <td>Name of the Pi</td>
+                        <td>设备名称</td>
                         <td>{{sys_data.machine_name}}</td>
                     </tr>
                     <tr>
-                        <td>Hardware Type</td>
+                        <td>硬件类型</td>
                         <td>{{cpu_genric_info[1][1]}}</td>
                     </tr>
                     <tr>
-                        <td>Serial Number</td>
+                        <td>序列号</td>
                         <td>{{cpu_genric_info[2][1]}}</td>
                     </tr>
                     <tr>
-                        <td>Operating System</td>
+                        <td>操作系统</td>
                         <td>{{os_name}}</td>
                     </tr>
                     <tr>
-                        <td>Running Since</td>
+                        <td>已运行时间</td>
                         <td>{{boot_info.running_duration}}, Started on {{boot_info.start_time}}</td>
                     </tr>
                     <tr>
-                        <td>System Time</td>
+                        <td>系统时间</td>
                         <td>{{sys_data.current_time}}</td>
                     </tr>
                 </tbody>
@@ -41,33 +41,33 @@
     </div>
     <div class="card" style="width: 40rem;">
         <div class="card-body">
-            <h5 class="card-title">CPU Details</h5>
-            <h6 class="card-subtitle mb-2 text-muted">CPU详细信息</h6>
+            <h5 class="card-title">CPU详细信息</h5>
+            <h6 class="card-subtitle mb-2 text-muted">CPU Details</h6>
             <p class="card-text">
             <table class="table">
                 <tbody>
                     <tr>
-                        <td>Processor Type</td>
+                        <td>处理器类型</td>
                         <td>{{cpu_genric_info[0][1]}}</td>
                     </tr>
                     <tr>
-                        <td>Core Frequency</td>
+                        <td>核心频率</td>
                         <td>{{cpu_core_frequency}} Mhz</td>
                     </tr>
                     <tr>
-                        <td>No of Cores</td>
+                        <td>核心数</td>
                         <td>{{cpu_processor_count}}</td>
                     </tr>
                     <tr>
-                        <td>Temperature</td>
+                        <td>温度</td>
                         <td>{{cpu_temperature.temperature}}</td>
                     </tr>
                     <tr>
-                        <td>Core Volt</td>
+                        <td>核心电压</td>
                         <td>{{cpu_core_volt}}</td>
                     </tr>
                     <tr>
-                        <td>CPU Usage</td>
+                        <td>CPU 使用率</td>
                         <td>{{cpu_usage_info['in_use']}} %</td>
                     </tr>
                 </tbody>
@@ -77,21 +77,21 @@
     </div>
     <div class="card" style="width: 40rem;">
         <div class="card-body">
-            <h5 class="card-title">Memory Details</h5>
-            <h6 class="card-subtitle mb-2 text-muted">内存基本信息</h6>
+            <h5 class="card-title">内存基本信息</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Memory Details</h6>
             <p class="card-text">
             <table class="table">
                 <tbody>
                     <tr>
-                        <td>Total Memory</td>
+                        <td>总内存</td>
                         <td>{{memory_usage_info.total}} MB</td>
                     </tr>
                     <tr>
-                        <td>In Use</td>
+                        <td>已使用</td>
                         <td>{{memory_usage_info.used}} MB</td>
                     </tr>
                     <tr>
-                        <td>Free</td>
+                        <td>空闲</td>
                         <td>{{memory_usage_info.available}} MB</td>
                     </tr>
                 </tbody>
@@ -101,18 +101,18 @@
     </div>
     <div class="card" style="width: 40rem;">
         <div class="card-body">
-            <h5 class="card-title">Disk Details</h5>
-            <h6 class="card-subtitle mb-2 text-muted">磁盘基本信息</h6>
+            <h5 class="card-title">磁盘基本信息</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Disk Details</h6>
             <p class="card-text">
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">File System</th>
-                        <th scope="col">Size</th>
-                        <th scope="col">Used</th>
-                        <th scope="col">Avail</th>
-                        <th scope="col">Used%</th>
-                        <th scope="col">Mounted On</th>
+                        <th scope="col">文件系统</th>
+                        <th scope="col">空间</th>
+                        <th scope="col">已使用</th>
+                        <th scope="col">未使用</th>
+                        <th scope="col">使用率</th>
+                        <th scope="col">挂载点</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -133,18 +133,18 @@
     </div>
     <div class="card" style="width: 40rem;">
         <div class="card-body">
-            <h5 class="card-title">Running Process Details</h5>
-            <h6 class="card-subtitle mb-2 text-muted">进程基本信息</h6>
+            <h5 class="card-title">进程基本信息</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Running Process Details</h6>
             <p class="card-text">
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">User</th>
-                        <th scope="col">ProcId</th>
-                        <th scope="col">CPU%</th>
-                        <th scope="col">Mem%</th>
-                        <th scope="col">Application</th>
-                        <th scope="col">Started On</th>
+                        <th scope="col">用户</th>
+                        <th scope="col">进程号</th>
+                        <th scope="col">CPU使用率</th>
+                        <th scope="col">内存使用率</th>
+                        <th scope="col">应用</th>
+                        <th scope="col">运行时间</th>
                     </tr>
                 </thead>
                 <tbody>
